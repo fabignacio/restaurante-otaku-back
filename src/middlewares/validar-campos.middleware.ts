@@ -27,11 +27,14 @@ const validarJWT = (req, res = response, next) => {
 
     try {
 
-        const { uid, nombre, email } = jwt.verify(token, process.env.SECRET_JWT_SEED);
-
+        const { uid, rut, nombre, apellido, email, rol } = jwt.verify(token, process.env.SECRET_JWT_SEED);
+        console.log('Validar JWT', uid, rut, nombre, apellido, email, rol)
         req.uid = uid;
+        req.rut = rut;
         req.nombre = nombre;
+        req.apellido = apellido;
         req.email = email;
+        req.rol = rol;
 
     } catch (error) {
         return res.status(401).json({
