@@ -4,7 +4,8 @@ const {
     crearUsuario,
     editarUsuario,
     loginUsuario,
-    validarToken
+    validarToken,
+    eliminarUsuario
 } = require('../../controllers/staff/staff.controller');
 const { validarCampos, validarJWT } = require('../../middlewares/validar-campos.middleware.ts')
 
@@ -27,7 +28,10 @@ router.post('/editar', [
     check('email', 'Es obligatorio').isEmail(),
     check('password', 'Es obligatorio').isLength({ min: 6 }),
     validarCampos
-], editarUsuario)
+], editarUsuario);
+
+//Eliminar Personal
+router.delete('/eliminar', [], eliminarUsuario);
 
 //Login
 router.post('/ingreso', [

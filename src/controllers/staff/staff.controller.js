@@ -69,19 +69,16 @@ const editarUsuario = async (req, res = response) => {
             let pass = bcrypt.hashSync(password, salt);
             password = pass;
 
-            //Crear usuario con el modelo
-            const dbStaff = Staff.updateOne({ rut }, {
+            //Generar el JWT
+            const token = await generarJWT(personal.id, rut, nombre, apellido, email, rol);
+
+            await Staff.updateOne({ rut }, {
                 nombre,
                 apellido,
                 email,
                 password,
                 rol
             });
-
-            //Generar el JWT
-            const token = await generarJWT(dbStaff.id, rut, nombre, apellido, email, rol);
-
-            await dbStaff.update();
 
             return res.status(200).json({
                 ok: true,
@@ -93,6 +90,38 @@ const editarUsuario = async (req, res = response) => {
                 token
             })
 
+        } else {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No existe un miembro del personal con ese rut'
+            })
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+
+}
+
+const eliminarUsuario = async (req, res = response) => {
+
+    const { rut } = req.body;
+
+    try {
+        //Verificar si el rut existe
+        const personal = await Staff.findOne({ rut });
+
+        if (personal) {
+
+            await Staff.deleteOne({ rut });
+            return res.status(200).json({
+                ok: true,
+                msg: 'Personal eliminado correctamente'
+            })
         } else {
             return res.status(400).json({
                 ok: false,
@@ -180,6 +209,7 @@ const validarToken = async (req, res = response) => {
 module.exports = {
     crearUsuario,
     editarUsuario,
+    eliminarUsuario,
     loginUsuario,
     validarToken
 }
