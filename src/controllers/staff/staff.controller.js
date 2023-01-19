@@ -139,6 +139,64 @@ const eliminarUsuario = async (req, res = response) => {
 
 }
 
+const obtenerPersonal = async (req, res = response) => {
+
+    try {
+
+        await Staff.find().then(data => {
+            if (data) {
+
+                return res.status(200).json({
+                    ok: true,
+                    data
+                });
+
+            } else {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'No hay nada para mostrar'
+                })
+            }
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+}
+
+const obtenerTrabajador = async (req, res = response) => {
+    const { rut } = req.body;
+    try {
+
+        await Staff.findOne({ rut }).then(data => {
+            if (data) {
+
+                return res.status(200).json({
+                    ok: true,
+                    data
+                });
+
+            } else {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'No hay nada para mostrar'
+                })
+            }
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+}
+
 const loginUsuario = async (req, res = response) => {
 
     const { email, password } = req.body;
@@ -210,6 +268,8 @@ module.exports = {
     crearUsuario,
     editarUsuario,
     eliminarUsuario,
+    obtenerPersonal,
+    obtenerTrabajador,
     loginUsuario,
     validarToken
 }

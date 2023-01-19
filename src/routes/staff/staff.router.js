@@ -3,9 +3,11 @@ const { check } = require('express-validator');
 const {
     crearUsuario,
     editarUsuario,
+    eliminarUsuario,
+    obtenerPersonal,
+    obtenerTrabajador,
     loginUsuario,
     validarToken,
-    eliminarUsuario
 } = require('../../controllers/staff/staff.controller');
 const { validarCampos, validarJWT } = require('../../middlewares/validar-campos.middleware.ts')
 
@@ -32,6 +34,12 @@ router.post('/editar', [
 
 //Eliminar Personal
 router.delete('/eliminar', [], eliminarUsuario);
+
+//Obtener Personal
+router.get('/listado', [], obtenerPersonal);
+
+//Obtener Trabajador
+router.get('/buscar', [], obtenerTrabajador);
 
 //Login
 router.post('/ingreso', [
