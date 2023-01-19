@@ -6,16 +6,24 @@ const ReservaSchema = Schema({
         require: true,
         unique: true
     },
+    nombreCliente: {
+        type: String,
+        require: true,
+    },
+    correoCliente: {
+        type: String,
+        require: true,
+    },
     cantidadPersonas: {
         type: Number,
         require: true
     },
     fecha: {
-        type: Date,
+        type: String,
         require: true
     },
     hora: {
-        type: Date,
+        type: String,
         require: true
     },
 })

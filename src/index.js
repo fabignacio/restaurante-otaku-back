@@ -23,7 +23,7 @@ app.use(express.json());
 
 //Rutas
 app.use('/staff', require('./routes/staff/staff.router'));
-//app.use('reserva/', require('./routes/reserva/reserva.router'));
+app.use('/reserva', require('./routes/reserva/reserva.router'));
 
 app.listen(process.env.PORT, () => {
     console.log(`Servidor corriendo en puerto ${process.env.PORT}`);
