@@ -27,7 +27,6 @@ const crearUsuario = async (req, res = response) => {
         dbStaff.password = bcrypt.hashSync(password, salt);
 
         //Generar el JWT
-        console.log('1', dbStaff.id, rut, nombre, apellido, email, rol)
         const token = await generarJWT(dbStaff.id, rut, nombre, apellido, email, rol);
 
         //Insertar en DB
@@ -55,6 +54,61 @@ const crearUsuario = async (req, res = response) => {
 
 }
 
+const editarUsuario = async (req, res = response) => {
+
+    let { rut, nombre, apellido, email, password, rol } = req.body;
+
+    try {
+
+        const personal = await Staff.findOne({ rut });
+
+        if (personal) {
+
+            //Encriptar las pass
+            const salt = bcrypt.genSaltSync();
+            let pass = bcrypt.hashSync(password, salt);
+            password = pass;
+
+            //Crear usuario con el modelo
+            const dbStaff = Staff.updateOne({ rut }, {
+                nombre,
+                apellido,
+                email,
+                password,
+                rol
+            });
+
+            //Generar el JWT
+            const token = await generarJWT(dbStaff.id, rut, nombre, apellido, email, rol);
+
+            await dbStaff.update();
+
+            return res.status(200).json({
+                ok: true,
+                rut,
+                nombre,
+                apellido,
+                email,
+                rol,
+                token
+            })
+
+        } else {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No existe un miembro del personal con ese rut'
+            })
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+
+}
 
 const loginUsuario = async (req, res = response) => {
 
@@ -125,6 +179,7 @@ const validarToken = async (req, res = response) => {
 
 module.exports = {
     crearUsuario,
+    editarUsuario,
     loginUsuario,
     validarToken
 }
