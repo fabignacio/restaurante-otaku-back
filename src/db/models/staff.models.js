@@ -13,7 +13,32 @@ const StaffSchema = Schema({
         required: true
     },
 
+    segundoNombre: {
+        type: String,
+        required: true
+    },
+
     apellido: {
+        type: String,
+        required: true
+    },
+
+    segundoApellido: {
+        type: String,
+        required: true
+    },
+
+    direccion: {
+        type: String,
+        required: true
+    },
+
+    telefono: {
+        type: String,
+        required: true
+    },
+
+    fechaNacimiento: {
         type: String,
         required: true
     },

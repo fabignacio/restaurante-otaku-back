@@ -5,19 +5,50 @@ const { generarJWT } = require('../../helpers/jwt.helpers')
 
 const crearUsuario = async (req, res = response) => {
 
-    const { rut, nombre, apellido, email, password, rol } = req.body;
+    const {
+        rut,
+        nombre,
+        segundoNombre,
+        apellido,
+        segundoApellido,
+        estadoCivil,
+        direccion,
+        fechaNacimiento,
+        telefono,
+        correoPersonal,
+        correoEmpresa,
+        password1,
+        password2,
+        nombreBanco,
+        tipoCuenta,
+        numeroCuenta,
+        tipoPrevision,
+        nombreIsapre,
+        sueldoBruto,
+        sueldoLiquido,
+        rol
+    } = req.body;
 
     try {
         //Verificar si el rut existe
-        const personal = await Staff.findOne({ rut });
+        const rutPersonal = await Staff.findOne({ rut });
 
-        if (personal) {
-
+        if (rutPersonal) {
             return res.status(400).json({
                 ok: false,
                 msg: 'Ya existe un miembro del personal con ese rut'
             })
+        };
+
+        const emailPersonal = await Staff.findOne({ email });
+
+        if (emailPersonal) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Ya existe un miembro del personal con ese email'
+            })
         }
+
 
         //Crear usuario con el modelo
         const dbStaff = new Staff(req.body);
@@ -27,7 +58,30 @@ const crearUsuario = async (req, res = response) => {
         dbStaff.password = bcrypt.hashSync(password, salt);
 
         //Generar el JWT
-        const token = await generarJWT(dbStaff.id, rut, nombre, apellido, email, rol);
+        const token = await generarJWT(
+            dbStaff.id,
+            rut,
+            nombre,
+            segundoNombre,
+            apellido,
+            segundoApellido,
+            estadoCivil,
+            direccion,
+            fechaNacimiento,
+            telefono,
+            correoPersonal,
+            correoEmpresa,
+            password1,
+            password2,
+            nombreBanco,
+            tipoCuenta,
+            numeroCuenta,
+            tipoPrevision,
+            nombreIsapre,
+            sueldoBruto,
+            sueldoLiquido,
+            rol
+        );
 
         //Insertar en DB
         await dbStaff.save();
@@ -38,8 +92,24 @@ const crearUsuario = async (req, res = response) => {
             uid: dbStaff.id,
             rut,
             nombre,
+            segundoNombre,
             apellido,
-            email,
+            segundoApellido,
+            estadoCivil,
+            direccion,
+            fechaNacimiento,
+            telefono,
+            correoPersonal,
+            correoEmpresa,
+            password1,
+            password2,
+            nombreBanco,
+            tipoCuenta,
+            numeroCuenta,
+            tipoPrevision,
+            nombreIsapre,
+            sueldoBruto,
+            sueldoLiquido,
             rol,
             token
         })
@@ -56,11 +126,34 @@ const crearUsuario = async (req, res = response) => {
 
 const editarUsuario = async (req, res = response) => {
 
-    let { rut, nombre, apellido, email, password, rol } = req.body;
+    let {
+        rut,
+        nombre,
+        segundoNombre,
+        apellido,
+        segundoApellido,
+        estadoCivil,
+        direccion,
+        fechaNacimiento,
+        telefono,
+        correoPersonal,
+        correoEmpresa,
+        password1,
+        password2,
+        nombreBanco,
+        tipoCuenta,
+        numeroCuenta,
+        tipoPrevision,
+        nombreIsapre,
+        sueldoBruto,
+        sueldoLiquido,
+        rol,
+    } = req.body;
 
     try {
 
         const personal = await Staff.findOne({ rut });
+        console.log(personal);
 
         if (personal) {
 
@@ -70,22 +163,75 @@ const editarUsuario = async (req, res = response) => {
             password = pass;
 
             //Generar el JWT
-            const token = await generarJWT(personal.id, rut, nombre, apellido, email, rol);
+            const token = await generarJWT(
+                personal.id,
+                rut,
+                nombre,
+                segundoNombre,
+                apellido,
+                segundoApellido,
+                estadoCivil,
+                direccion,
+                fechaNacimiento,
+                telefono,
+                correoPersonal,
+                correoEmpresa,
+                password1,
+                password2,
+                nombreBanco,
+                tipoCuenta,
+                numeroCuenta,
+                tipoPrevision,
+                nombreIsapre,
+                sueldoBruto,
+                sueldoLiquido,
+                rol
+            );
 
             await Staff.updateOne({ rut }, {
                 nombre,
+                segundoNombre,
                 apellido,
-                email,
-                password,
+                segundoApellido,
+                estadoCivil,
+                direccion,
+                fechaNacimiento,
+                telefono,
+                correoPersonal,
+                correoEmpresa,
+                password1,
+                password2,
+                nombreBanco,
+                tipoCuenta,
+                numeroCuenta,
+                tipoPrevision,
+                nombreIsapre,
+                sueldoBruto,
+                sueldoLiquido,
                 rol
             });
 
             return res.status(200).json({
                 ok: true,
-                rut,
                 nombre,
+                segundoNombre,
                 apellido,
-                email,
+                segundoApellido,
+                estadoCivil,
+                direccion,
+                fechaNacimiento,
+                telefono,
+                correoPersonal,
+                correoEmpresa,
+                password1,
+                password2,
+                nombreBanco,
+                tipoCuenta,
+                numeroCuenta,
+                tipoPrevision,
+                nombreIsapre,
+                sueldoBruto,
+                sueldoLiquido,
                 rol,
                 token
             })
@@ -223,14 +369,29 @@ const loginUsuario = async (req, res = response) => {
         }
 
         // Generar el JWT
-        const token = await generarJWT(dbStaff.id, dbStaff.nombre, dbStaff.email);
+        const token = await generarJWT(
+            dbStaff.id,
+            dbStaff.rut,
+            dbStaff.nombre,
+            dbStaff.segundoNombre,
+            dbStaff.apellido,
+            dbStaff.segundoApellido,
+            dbStaff.direccion,
+            dbStaff.estadoCivil,
+            dbStaff.telefono,
+            dbStaff.fechaNacimiento,
+            dbStaff.email,
+            dbStaff.rol
+        );
 
         //Respuesta del servicio
         return res.json({
             ok: true,
             uid: dbStaff.id,
             nombre: dbStaff.nombre,
+            apellido: dbStaff.apellido,
             email: dbStaff.email,
+            rol: dbStaff.rol,
             token
         })
 
@@ -247,7 +408,6 @@ const loginUsuario = async (req, res = response) => {
 const validarToken = async (req, res = response) => {
 
     const { uid, rut, nombre, apellido, email, rol } = req;
-    console.log('Validar Token', uid, rut, nombre, apellido, email, rol);
 
     //Generar el JWT
     const token = await generarJWT(uid, rut, nombre, apellido, email, rol);
