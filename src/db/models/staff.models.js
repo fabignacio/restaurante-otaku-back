@@ -28,6 +28,11 @@ const StaffSchema = Schema({
         required: true
     },
 
+    estadoCivil: {
+        type: String,
+        required: true
+    },
+
     direccion: {
         type: String,
         required: true
@@ -38,17 +43,27 @@ const StaffSchema = Schema({
         required: true
     },
 
+    correoPersonal: {
+        type: String,
+        required: true
+    },
+
     fechaNacimiento: {
         type: String,
         required: true
     },
 
-    email: {
+    correoEmpresa: {
         type: String,
         required: true
     },
 
-    password: {
+    password1: {
+        type: String,
+        required: true
+    },
+
+    password2: {
         type: String,
         required: true
     },
@@ -56,6 +71,41 @@ const StaffSchema = Schema({
     rol: {
         type: Number,
         required: true
+    },
+
+    nombreBanco: {
+        type: String,
+        required: true,
+    },
+
+    tipoCuenta: {
+        type: String,
+        required: true
+    },
+
+    numeroCuenta: {
+        type: String,
+        required: true
+    },
+
+    sueldoBruto: {
+        type: Number,
+        required: true
+    },
+
+    sueldoLiquido: {
+        type: Number,
+        required: true
+    },
+
+    tipoPrevision: {
+        type: String,
+        required: true
+    },
+
+    nombreIsapre: {
+        type: String,
+        required: false
     }
 })
 

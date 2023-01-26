@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken');
 
 const generarJWT = (
+    uid,
     rut,
     nombre,
     segundoNombre,
@@ -12,8 +13,6 @@ const generarJWT = (
     telefono,
     correoPersonal,
     correoEmpresa,
-    password1,
-    password2,
     nombreBanco,
     tipoCuenta,
     numeroCuenta,
@@ -25,6 +24,7 @@ const generarJWT = (
 ) => {
 
     const payload = {
+        uid,
         rut,
         nombre,
         segundoNombre,
@@ -36,8 +36,6 @@ const generarJWT = (
         telefono,
         correoPersonal,
         correoEmpresa,
-        password1,
-        password2,
         nombreBanco,
         tipoCuenta,
         numeroCuenta,

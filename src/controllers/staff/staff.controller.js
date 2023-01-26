@@ -40,9 +40,9 @@ const crearUsuario = async (req, res = response) => {
             })
         };
 
-        const emailPersonal = await Staff.findOne({ email });
+        const emailEmpresa = await Staff.findOne({ correoEmpresa });
 
-        if (emailPersonal) {
+        if (emailEmpresa) {
             return res.status(400).json({
                 ok: false,
                 msg: 'Ya existe un miembro del personal con ese email'
@@ -55,7 +55,8 @@ const crearUsuario = async (req, res = response) => {
 
         //Encriptar las pass
         const salt = bcrypt.genSaltSync();
-        dbStaff.password = bcrypt.hashSync(password, salt);
+        dbStaff.password1 = bcrypt.hashSync(password1, salt);
+        dbStaff.password2 = bcrypt.hashSync(password2, salt);
 
         //Generar el JWT
         const token = await generarJWT(
@@ -71,8 +72,6 @@ const crearUsuario = async (req, res = response) => {
             telefono,
             correoPersonal,
             correoEmpresa,
-            password1,
-            password2,
             nombreBanco,
             tipoCuenta,
             numeroCuenta,
@@ -101,8 +100,6 @@ const crearUsuario = async (req, res = response) => {
             telefono,
             correoPersonal,
             correoEmpresa,
-            password1,
-            password2,
             nombreBanco,
             tipoCuenta,
             numeroCuenta,
@@ -153,14 +150,15 @@ const editarUsuario = async (req, res = response) => {
     try {
 
         const personal = await Staff.findOne({ rut });
-        console.log(personal);
 
         if (personal) {
 
             //Encriptar las pass
             const salt = bcrypt.genSaltSync();
-            let pass = bcrypt.hashSync(password, salt);
-            password = pass;
+            let pass = bcrypt.hashSync(password1, salt);
+            password1 = pass;
+            let pass2 = bcrypt.hashSync(password2, salt);
+            password2 = pass2;
 
             //Generar el JWT
             const token = await generarJWT(
@@ -176,8 +174,6 @@ const editarUsuario = async (req, res = response) => {
                 telefono,
                 correoPersonal,
                 correoEmpresa,
-                password1,
-                password2,
                 nombreBanco,
                 tipoCuenta,
                 numeroCuenta,
@@ -223,8 +219,6 @@ const editarUsuario = async (req, res = response) => {
                 telefono,
                 correoPersonal,
                 correoEmpresa,
-                password1,
-                password2,
                 nombreBanco,
                 tipoCuenta,
                 numeroCuenta,
@@ -345,11 +339,11 @@ const obtenerTrabajador = async (req, res = response) => {
 
 const loginUsuario = async (req, res = response) => {
 
-    const { email, password } = req.body;
+    const { correEmpresa, password1 } = req.body;
 
     try {
 
-        const dbStaff = await Staff.findOne({ email });
+        const dbStaff = await Staff.findOne({ correEmpresa });
 
         if (!dbStaff) {
             return res.status(400).json({
@@ -359,7 +353,7 @@ const loginUsuario = async (req, res = response) => {
         }
 
         // Confirmar si el password hace match
-        const validPassword = bcrypt.compareSync(password, dbStaff.password);
+        const validPassword = bcrypt.compareSync(password1, dbStaff.password1);
 
         if (!validPassword) {
             return res.status(400).json({
@@ -376,11 +370,19 @@ const loginUsuario = async (req, res = response) => {
             dbStaff.segundoNombre,
             dbStaff.apellido,
             dbStaff.segundoApellido,
-            dbStaff.direccion,
             dbStaff.estadoCivil,
-            dbStaff.telefono,
+            dbStaff.direccion,
             dbStaff.fechaNacimiento,
-            dbStaff.email,
+            dbStaff.telefono,
+            dbStaff.correoPersonal,
+            dbStaff.correoEmpresa,
+            dbStaff.nombreBanco,
+            dbStaff.tipoCuenta,
+            dbStaff.numeroCuenta,
+            dbStaff.tipoPrevision,
+            dbStaff.nombreIsapre,
+            dbStaff.sueldoBruto,
+            dbStaff.sueldoLiquido,
             dbStaff.rol
         );
 
@@ -388,9 +390,24 @@ const loginUsuario = async (req, res = response) => {
         return res.json({
             ok: true,
             uid: dbStaff.id,
+            rut: dbStaff.rut,
             nombre: dbStaff.nombre,
+            segundoNombre: dbStaff.segundoNombre,
             apellido: dbStaff.apellido,
-            email: dbStaff.email,
+            segundoApellid: dbStaff.segundoApellido,
+            estadoCivil: dbStaff.estadoCivil,
+            direccion: dbStaff.direccion,
+            fechaNacimiento: dbStaff.fechaNacimiento,
+            telefono: dbStaff.telefono,
+            correoPersonal: dbStaff.correoPersonal,
+            correoEmpresa: dbStaff.correoEmpresa,
+            nombreBanco: dbStaff.nombreBanco,
+            tipoCuenta: dbStaff.tipoCuenta,
+            numeroCuenta: dbStaff.numeroCuenta,
+            tipoPrevision: dbStaff.tipoPrevision,
+            nombreIsapre: dbStaff.nombreIsapre,
+            sueldoBruto: dbStaff.sueldoBruto,
+            sueldoLiquido: dbStaff.sueldoLiquido,
             rol: dbStaff.rol,
             token
         })
@@ -407,18 +424,74 @@ const loginUsuario = async (req, res = response) => {
 
 const validarToken = async (req, res = response) => {
 
-    const { uid, rut, nombre, apellido, email, rol } = req;
+    const {
+        uid,
+        rut,
+        nombre,
+        segundoNombre,
+        apellido,
+        segundoApellido,
+        estadoCivil,
+        direccion,
+        fechaNacimiento,
+        telefono,
+        correoPersonal,
+        correoEmpresa,
+        nombreBanco,
+        tipoCuenta,
+        numeroCuenta,
+        tipoPrevision,
+        nombreIsapre,
+        sueldoBruto,
+        sueldoLiquido,
+        rol
+    } = req;
 
     //Generar el JWT
-    const token = await generarJWT(uid, rut, nombre, apellido, email, rol);
+    const token = await generarJWT(
+        uid,
+        rut,
+        nombre,
+        segundoNombre,
+        apellido,
+        segundoApellido,
+        estadoCivil,
+        direccion,
+        fechaNacimiento,
+        telefono,
+        correoPersonal,
+        correoEmpresa,
+        nombreBanco,
+        tipoCuenta,
+        numeroCuenta,
+        tipoPrevision,
+        nombreIsapre,
+        sueldoBruto,
+        sueldoLiquido,
+        rol
+    );
 
-    return res.json({
+    return res.status(200).json({
         ok: true,
         uid,
         rut,
         nombre,
+        segundoNombre,
         apellido,
-        email,
+        segundoApellido,
+        estadoCivil,
+        direccion,
+        fechaNacimiento,
+        telefono,
+        correoPersonal,
+        correoEmpresa,
+        nombreBanco,
+        tipoCuenta,
+        numeroCuenta,
+        tipoPrevision,
+        nombreIsapre,
+        sueldoBruto,
+        sueldoLiquido,
         rol,
         token
     });
