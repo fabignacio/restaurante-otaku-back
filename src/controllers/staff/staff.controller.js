@@ -339,11 +339,11 @@ const obtenerTrabajador = async (req, res = response) => {
 
 const loginUsuario = async (req, res = response) => {
 
-    const { correEmpresa, password1 } = req.body;
+    const { correoEmpresa, password1 } = req.body;
 
     try {
 
-        const dbStaff = await Staff.findOne({ correEmpresa });
+        const dbStaff = await Staff.findOne({ correoEmpresa });
 
         if (!dbStaff) {
             return res.status(400).json({

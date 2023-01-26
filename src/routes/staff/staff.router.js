@@ -73,8 +73,8 @@ router.get('/buscar', [], obtenerTrabajador);
 
 //Login
 router.post('/ingreso', [
-    check('email', 'El email es obligatorio').isEmail(),
-    check('password', 'El password es obligatorio').isLength({ min: 6 }),
+    check('correoEmpresa', 'El email es obligatorio').isEmail(),
+    check('password1', 'El password es obligatorio').isLength({ min: 6 }),
     validarCampos
 ], loginUsuario);
 
