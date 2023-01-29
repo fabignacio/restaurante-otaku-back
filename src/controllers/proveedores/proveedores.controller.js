@@ -172,7 +172,6 @@ const buscarProveedores = async (req, res = response) => {
 const buscarProveedor = async (req, res = response) => {
 
     const rutProveedor = req.params.rutProveedor;
-    console.log(rutProveedor);
 
     try {
 
