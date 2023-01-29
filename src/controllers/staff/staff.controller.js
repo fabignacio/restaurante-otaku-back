@@ -266,8 +266,8 @@ const eliminarUsuario = async (req, res = response) => {
             return res.status(400).json({
                 ok: false,
                 msg: 'No existe un miembro del personal con ese rut'
-            })
-        }
+            });
+        };
 
     } catch (error) {
         console.log(error);
@@ -283,21 +283,18 @@ const obtenerPersonal = async (req, res = response) => {
 
     try {
 
-        await Staff.find().then(data => {
-            if (data) {
-
-                return res.status(200).json({
-                    ok: true,
-                    data
-                });
-
-            } else {
-                return res.status(400).json({
-                    ok: false,
-                    msg: 'No hay nada para mostrar'
-                })
-            }
-        })
+        const staff = await Staff.find();
+        if (staff) {
+            return res.status(200).json({
+                ok: true,
+                staff
+            })
+        } else {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No hay nada para mostrar'
+            });
+        }
 
     } catch (error) {
         console.log(error);
@@ -309,24 +306,24 @@ const obtenerPersonal = async (req, res = response) => {
 }
 
 const obtenerTrabajador = async (req, res = response) => {
-    const { rut } = req.body;
+    const rut = req.params.rut;
     try {
 
-        await Staff.findOne({ rut }).then(data => {
-            if (data) {
+        const staff = await Staff.findOne({ rut })
+        if (staff) {
 
-                return res.status(200).json({
-                    ok: true,
-                    data
-                });
+            return res.status(200).json({
+                ok: true,
+                staff: [staff]
+            });
 
-            } else {
-                return res.status(400).json({
-                    ok: false,
-                    msg: 'No hay nada para mostrar'
-                })
-            }
-        })
+        } else {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No hay nada para mostrar'
+            })
+        }
+
 
     } catch (error) {
         console.log(error);

@@ -69,7 +69,7 @@ router.delete('/eliminar', [], eliminarUsuario);
 router.get('/listado', [], obtenerPersonal);
 
 //Obtener Trabajador
-router.get('/buscar', [], obtenerTrabajador);
+router.get('/buscar/:rut', obtenerTrabajador);
 
 //Login
 router.post('/ingreso', [
