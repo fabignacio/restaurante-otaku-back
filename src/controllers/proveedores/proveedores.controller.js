@@ -36,6 +36,7 @@ const crearProveedor = async (req, res = response) => {
         return res.status(200).json({
             ok: true,
             uid: dbProveedor.id,
+            rutProveedor,
             nombre,
             direccion,
             direccionComercial,
@@ -166,10 +167,12 @@ const buscarProveedores = async (req, res = response) => {
         });
     }
 }
+
 //Buscar uno
 const buscarProveedor = async (req, res = response) => {
 
     const rutProveedor = req.params.rutProveedor;
+    console.log(rutProveedor);
 
     try {
 
